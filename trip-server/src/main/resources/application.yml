@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: trip-server
+
+server:
+  port: 8082
+
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761

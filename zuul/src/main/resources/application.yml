@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: zuul-server
+
+server:
+  port: 8080
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+
+zuul:
+  routes:
+    car-server:
+      path: /cars/**
+      serviceId: car-server
+      stripPrefix: false
+    trip-server:
+      path: /trip/**
+      serviceId: trip-server
+      stripPrefix: false
