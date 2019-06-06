@@ -1,0 +1,61 @@
+version: '3.6'
+
+services:
+
+  eureka:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PATH_SERVICE: eureka-server
+        SERVICE: eureka-server
+    image: phsm/eureka-server:latest
+    ports:
+      - "8761:8761"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761"]
+      timeout: 30s
+
+  zuul:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PATH_SERVICE: zuul
+        SERVICE: zuul-server
+    image: phsm/zuul-server:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      timeout: 60s
+
+  trip:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PATH_SERVICE: trip-server
+        SERVICE: trip-server
+    image: phsm/trip-server:latest
+    depends_on:
+      - eureka
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/trip"]
+      timeout: 60s
+
+  car:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PATH_SERVICE: car-server
+        SERVICE: car-server
+    image: phsm/car-server:latest
+    depends_on:
+      - eureka
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/cars"]
+      timeout: 60s
