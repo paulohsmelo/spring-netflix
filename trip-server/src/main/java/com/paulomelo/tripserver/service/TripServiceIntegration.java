@@ -1,5 +1,6 @@
 package com.paulomelo.tripserver.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -12,8 +13,13 @@ public class TripServiceIntegration {
         this.restTemplate = restTemplate;
     }
 
+    @HystrixCommand(fallbackMethod = "getCarFallback")
     public String getCar(String model) {
         // TODO refactor URL String to property
         return restTemplate.getForEntity("http://car-server/cars/" + model, String.class).getBody();
+    }
+
+    public String getCarFallback(String model) {
+        return "Nenhum carro recomendado";
     }
 }
