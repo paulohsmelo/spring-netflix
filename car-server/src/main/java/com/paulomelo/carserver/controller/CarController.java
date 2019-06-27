@@ -1,5 +1,6 @@
 package com.paulomelo.carserver.controller;
 
+import com.paulomelo.carserver.domain.Car;
 import com.paulomelo.carserver.service.CarService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,15 +20,15 @@ public class CarController {
         this.carService = carService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<String>> getAllCars() {
+    @GetMapping(produces = "application/json")
+    public ResponseEntity<List<Car>> getAllCars() {
         return ResponseEntity.ok(carService.getAllCars());
     }
 
     @GetMapping("/{model}")
-    public String getCarByModel(@PathVariable("model") String model) {
-        final String car = carService.getCar(model);
-        return car == null ? "Model " + model + " doesn't exists" : car;
+    public Car getCarByModel(@PathVariable("model") String model) {
+        final Car car = carService.getCar(model);
+        return car == null ? new Car("Model " + model + " doesn't exists") : car;
     }
 
 }

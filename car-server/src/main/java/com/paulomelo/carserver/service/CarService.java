@@ -1,21 +1,28 @@
 package com.paulomelo.carserver.service;
 
+import com.paulomelo.carserver.domain.Car;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.asList;
 
 @Service
 public class CarService {
 
-    private final List<String> cars = Arrays.asList("Monza", "Palio", "Corsa", "Spin");
-
-    public List<String> getAllCars() {
-        return cars;
+    public List<Car> getAllCars() {
+        return findCars();
     }
 
-    public String getCar(String car) {
-        final int index = cars.indexOf(car);
-        return index < 0 ? null : cars.get(index);
+    public Car getCar(String model) {
+        final Optional<Car> car = findCars().stream().filter(c -> c.getModel().equalsIgnoreCase(model)).findFirst();
+        return car.isPresent() ? car.get() : null;
+    }
+
+    private List<Car> findCars() {
+        return asList(new Car("Monza"), new Car("Palio"), new Car("Corsa"), new Car("Spin"));
     }
 }
