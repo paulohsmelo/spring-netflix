@@ -20,6 +20,6 @@ public class TripServiceIntegration {
     }
 
     public String getCarFallback(String model) {
-        return "Nenhum carro recomendado";
+        return "No car recommended";
     }
 }

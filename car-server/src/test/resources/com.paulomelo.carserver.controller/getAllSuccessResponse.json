@@ -1,6 +1,7 @@
-[
-  {"model":"Monza"},
-  {"model":"Palio"},
-  {"model":"Corsa"},
-  {"model":"Spin"}
-]
+{ "data" : [
+    {"model":"Monza"},
+    {"model":"Palio"},
+    {"model":"Corsa"},
+    {"model":"Spin"}
+  ]
+}

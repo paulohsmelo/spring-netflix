@@ -1,14 +1,16 @@
 package com.paulomelo.tripserver.service;
 
+import com.paulomelo.tripserver.domain.Destiny;
+import com.paulomelo.tripserver.exception.DestinyNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 @Service
 public class DestinyService {
-
-    private final List<String> destinies = Arrays.asList("Beach", "Mountain", "Woods");
 
     private final TripServiceIntegration tripServiceIntegration;
 
@@ -16,16 +18,18 @@ public class DestinyService {
         this.tripServiceIntegration = tripServiceIntegration;
     }
 
-    public List<String> getAllDestinies() {
-        return destinies;
+    public List<Destiny> getAllDestinies() {
+        return findDestinies();
     }
 
-    public String getDestiny(String destiny) {
-        final int index = destinies.indexOf(destiny);
-        if (index < 0) {
-            return "Destiny doesn't exists";
-        }
+    public Destiny getDestiny(String destiny) {
+        final Destiny des = findDestinies().stream().filter(d -> d.getLocation().equalsIgnoreCase(destiny)).findFirst().orElseThrow(() -> new DestinyNotFoundException(destiny));
+        des.setRecommendedCar(tripServiceIntegration.getCar("Corsa"));
+        return des;
+    }
 
-        return destinies.get(index) + " - Recommended car: " + tripServiceIntegration.getCar("Corsa");
+    private List<Destiny> findDestinies() {
+        // TODO integrate with noSQL database
+        return asList(new Destiny("Beach"), new Destiny("Moutain"), new Destiny("Woods"));
     }
 }

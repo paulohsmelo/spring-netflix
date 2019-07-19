@@ -1,5 +1,8 @@
 package com.paulomelo.tripserver.controller;
 
+import com.paulomelo.tripserver.dto.ErrorResponse;
+import com.paulomelo.tripserver.dto.TripResponse;
+import com.paulomelo.tripserver.exception.DestinyNotFoundException;
 import com.paulomelo.tripserver.service.DestinyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,12 +21,16 @@ public class TripController {
     }
 
     @GetMapping("/trip")
-    public ResponseEntity<List<String>> destinies() {
-        return ResponseEntity.ok(destinyService.getAllDestinies());
+    public ResponseEntity<TripResponse> destinies() {
+        return ResponseEntity.ok(TripResponse.withData(destinyService.getAllDestinies()));
     }
 
     @GetMapping("/trip/{destiny}")
-    public String carForDestiny(@PathVariable("destiny") String destiny) {
-        return destinyService.getDestiny(destiny);
+    public ResponseEntity<TripResponse> carForDestiny(@PathVariable("destiny") String destiny) {
+        try {
+            return ResponseEntity.ok(TripResponse.withData(destinyService.getDestiny(destiny)));
+        } catch (DestinyNotFoundException ex) {
+            return ResponseEntity.badRequest().body(TripResponse.withError(new ErrorResponse(ex.getMessage())));
+        }
     }
 }

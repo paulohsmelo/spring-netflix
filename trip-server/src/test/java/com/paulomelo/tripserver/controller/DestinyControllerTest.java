@@ -1,7 +1,6 @@
-package com.paulomelo.carserver.controller;
+package com.paulomelo.tripserver.controller;
 
-import org.hamcrest.Matchers;
-import org.junit.Assert;
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -14,51 +13,52 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
 import java.io.InputStream;
-import java.nio.file.Files;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CarControllerTest {
+public class DestinyControllerTest {
 
-    private static final String GET_ALL = "/cars";
-    private static final String GET_BY_MODEL = "/cars/{model}";
+    private final static String GET_ALL = "/trip";
+    private final static String GET_BY_DESTINY = "/trip/{destiny}";
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    public void getAllSuccess() throws Exception {
+    public void getAllDestiniesSuccess() throws Exception {
         final MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(GET_ALL);
         final MockHttpServletResponse response = mockMvc.perform(requestBuilder).andReturn().getResponse();
-        assertThat(response.getStatus(), Matchers.equalTo(200));
+
+        assertThat(response.getStatus(), equalTo(200));
         JSONAssert.assertEquals(parseJSON("getAllSuccessResponse.json"), response.getContentAsString(), JSONCompareMode.NON_EXTENSIBLE);
     }
 
     @Test
-    public void getByModelSuccess() throws Exception {
-        final MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(GET_BY_MODEL, "Monza");
+    public void getByDestinySuccess() throws Exception {
+        final MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(GET_BY_DESTINY, "Beach");
         final MockHttpServletResponse response = mockMvc.perform(requestBuilder).andReturn().getResponse();
-        assertThat(response.getStatus(), Matchers.equalTo(200));
-        JSONAssert.assertEquals(parseJSON("getByModelSuccess.json"), response.getContentAsString(), JSONCompareMode.NON_EXTENSIBLE);
+
+        assertThat(response.getStatus(), equalTo(200));
+        JSONAssert.assertEquals(parseJSON("getByDestinySuccessResponse.json"), response.getContentAsString(), JSONCompareMode.NON_EXTENSIBLE);
     }
 
     @Test
-    public void getByModelFail() throws Exception {
-        final MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(GET_BY_MODEL, "Invalid");
+    public void getByDestinyFail() throws Exception {
+        final MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(GET_BY_DESTINY, "fooDestiny");
         final MockHttpServletResponse response = mockMvc.perform(requestBuilder).andReturn().getResponse();
-        assertThat(response.getStatus(), Matchers.equalTo(400));
-        JSONAssert.assertEquals(parseJSON("getByModelFail.json"), response.getContentAsString(), JSONCompareMode.NON_EXTENSIBLE);
+
+        assertThat(response.getStatus(), equalTo(400));
+        JSONAssert.assertEquals(parseJSON("getByDestinyFailResponse.json"), response.getContentAsString(), JSONCompareMode.NON_EXTENSIBLE);
     }
 
     private String parseJSON(String resource) throws Exception {
-        final File file = ResourceUtils.getFile("classpath:com.paulomelo.carserver.controller/" + resource);
-        return new String(Files.readAllBytes(file.toPath()));
+        final InputStream stream = getClass().getResourceAsStream(resource);
+        return IOUtils.toString(stream);
     }
 }
