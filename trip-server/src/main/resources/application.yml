@@ -1,6 +1,11 @@
 spring:
   application:
     name: trip-server
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: tripdb
 
 server:
   port: 8082
@@ -9,3 +14,11 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761}/eureka/
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000

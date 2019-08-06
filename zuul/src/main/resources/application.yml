@@ -20,3 +20,7 @@ zuul:
       path: /trip/**
       serviceId: trip-server
       stripPrefix: false
+    destiny:
+      path: /destiny/**
+      serviceId: trip-server
+      stripPrefix: false

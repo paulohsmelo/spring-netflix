@@ -1,5 +1,8 @@
 package com.paulomelo.tripserver.domain;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
 public class Destiny {
 
     private String location;

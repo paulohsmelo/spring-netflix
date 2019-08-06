@@ -1,6 +1,12 @@
 spring:
   application:
     name: car-server
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: cardb
+
 
 server:
   port: 8081
