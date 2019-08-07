@@ -29,7 +29,7 @@ public class DestinyService {
 
     public Destiny getDestiny(String destiny) {
         final Destiny des = destinyRepository.findByLocation(destiny).stream().filter(d -> d.getLocation().equalsIgnoreCase(destiny)).findFirst().orElseThrow(() -> new DestinyNotFoundException(destiny));
-        des.setRecommendedCar(tripServiceIntegration.getCar("Corsa"));
+        des.setRecommendedCar(tripServiceIntegration.getCar("Corsa").getModel());
         return des;
     }
 

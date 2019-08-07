@@ -2,6 +2,14 @@ version: '3.6'
 
 services:
 
+  mongodb:
+    image: mongo
+    container_name: "spring-netflix-mongo"
+    ports:
+      - "27017:27017"
+    volumes:
+      - /home/phsm/farofa/mongodb_data:/data/db
+
   eureka:
     build:
       context: .
@@ -39,9 +47,12 @@ services:
       args:
         PATH_SERVICE: trip-server
         SERVICE: trip-server
+        MONGODB_INSTANCE: spring-netflix-mongo:27017
     image: phsm/trip-server:latest
     depends_on:
       - eureka
+      - zuul
+      - mongodb
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/trip"]
       timeout: 60s
@@ -53,9 +64,12 @@ services:
       args:
         PATH_SERVICE: car-server
         SERVICE: car-server
+        MONGODB_INSTANCE: spring-netflix-mongo:27017
     image: phsm/car-server:latest
     depends_on:
       - eureka
+      - zuul
+      - mongodb
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/cars"]
       timeout: 60s

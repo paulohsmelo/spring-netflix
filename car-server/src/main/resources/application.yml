@@ -6,7 +6,7 @@ spring:
       host: localhost
       port: 27017
       database: cardb
-
+      uri: mongodb://${MONGODB_INSTANCE:localhost:27017}/cardb
 
 server:
   port: 8081

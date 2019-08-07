@@ -3,9 +3,7 @@ spring:
     name: trip-server
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: tripdb
+      uri: mongodb://${MONGODB_INSTANCE:localhost:27017}/tripdb
 
 server:
   port: 8082

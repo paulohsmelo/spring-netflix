@@ -1,6 +1,7 @@
 package com.paulomelo.tripserver.service;
 
 import com.paulomelo.tripserver.domain.Destiny;
+import com.paulomelo.tripserver.dto.integration.CarResponse;
 import com.paulomelo.tripserver.exception.DestinyNotFoundException;
 import com.paulomelo.tripserver.repository.DestinyRepository;
 import com.paulomelo.tripserver.service.DestinyService;
@@ -53,6 +54,7 @@ public class DestinyServiceTest {
     @Test
     public void givenBeachThenReturnDestiny() {
         when(destinyRepositoryMock.findByLocation("Beach")).thenReturn(asList(new Destiny("Beach")));
+        when(tripServiceIntegrationMock.getCar("Corsa")).thenReturn(new CarResponse());
 
         final Destiny destiny = service.getDestiny("Beach");
         assertEquals("Beach", destiny.getLocation());
@@ -62,8 +64,11 @@ public class DestinyServiceTest {
 
     @Test
     public void validateRecommendedCar() {
+        final CarResponse carResponse = new CarResponse();
+        carResponse.setModel("Corsa");
+
+        when(tripServiceIntegrationMock.getCar("Corsa")).thenReturn(carResponse);
         when(destinyRepositoryMock.findByLocation("Beach")).thenReturn(asList(new Destiny("Beach")));
-        when(tripServiceIntegrationMock.getCar("Corsa")).thenReturn("Corsa");
 
         final Destiny destiny = service.getDestiny("Beach");
         assertEquals("Corsa", destiny.getRecommendedCar());
